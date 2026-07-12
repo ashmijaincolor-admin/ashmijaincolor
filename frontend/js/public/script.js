@@ -1423,11 +1423,6 @@ async function loadPortfolioIntoGallery() {
         GALLERY_DATA[categoryKey][existsIndex] = galleryItem;
       }
     });
-
-    // Remove any mock elements that have empty titles/artists
-    for (const cat in GALLERY_DATA) {
-      GALLERY_DATA[cat] = GALLERY_DATA[cat].filter(item => item.title && item.artist);
-    }
   }
 
   window.__portfolioGalleryMerged = true;
