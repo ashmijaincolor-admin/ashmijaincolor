@@ -181,9 +181,30 @@
       updateTextContent('.hero-sub', config.hero_sub || '');
 
       const statEls = document.querySelectorAll('.hero-stat-num');
-      if (statEls.length > 0) statEls[0].textContent = config.stat_sqft || '';
-      if (statEls.length > 1) statEls[1].textContent = config.stat_projects || '';
-      if (statEls.length > 2) statEls[2].textContent = config.stat_cities || '';
+      if (statEls.length > 0 && config.stat_sqft) {
+        statEls[0].setAttribute('data-target', config.stat_sqft);
+        if (typeof window.animateStatCounter === 'function') {
+          window.animateStatCounter(statEls[0]);
+        } else {
+          statEls[0].textContent = config.stat_sqft + (statEls[0].getAttribute('data-suffix') || '');
+        }
+      }
+      if (statEls.length > 1 && config.stat_projects) {
+        statEls[1].setAttribute('data-target', config.stat_projects);
+        if (typeof window.animateStatCounter === 'function') {
+          window.animateStatCounter(statEls[1]);
+        } else {
+          statEls[1].textContent = config.stat_projects + (statEls[1].getAttribute('data-suffix') || '');
+        }
+      }
+      if (statEls.length > 2 && config.stat_cities) {
+        statEls[2].setAttribute('data-target', config.stat_cities);
+        if (typeof window.animateStatCounter === 'function') {
+          window.animateStatCounter(statEls[2]);
+        } else {
+          statEls[2].textContent = config.stat_cities + (statEls[2].getAttribute('data-suffix') || '');
+        }
+      }
 
       updateTextContent('#footer-link-email', config.contact_email || '');
       updateTextContent('#footer-link-phone', config.contact_phone || '');

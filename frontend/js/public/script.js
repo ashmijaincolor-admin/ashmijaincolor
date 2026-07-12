@@ -1373,11 +1373,11 @@ function getGalleryCategoryKey(rawCategory) {
 async function loadPortfolioIntoGallery() {
   if (window.__portfolioGalleryMerged) return;
 
+  let items = [];
   try {
-    let items;
     if (typeof window.shouldBypassRemoteData === 'function' && window.shouldBypassRemoteData()) {
       items = (window.getFallbackPortfolioItems ? window.getFallbackPortfolioItems() : []).filter(i => !i.is_hidden);
-    } else {
+    } else if (window.db) {
       const { data, error } = await window.db
         .from('portfolio')
         .select('*')
@@ -1386,14 +1386,23 @@ async function loadPortfolioIntoGallery() {
       if (error) throw error;
       items = data || [];
     }
+  } catch (err) {
+    console.warn('[Gallery] Could not load portfolio items from Supabase, using fallback:', err);
+  }
 
+  // Fallback to local items if remote query failed or returned no results
+  if ((!items || items.length === 0) && typeof window.getFallbackPortfolioItems === 'function') {
+    items = window.getFallbackPortfolioItems().filter(i => !i.is_hidden);
+  }
+
+  if (items && items.length > 0) {
     items.forEach((item) => {
       const categoryKey = getGalleryCategoryKey(item.category);
       if (!categoryKey) return;
 
       const galleryItem = {
         title: item.title || 'Untitled project',
-        artist: item.artist_name || item.title || 'Ashmija S.R',
+        artist: item.artist_name || 'Ashmija S.R',
         medium: item.art_type || item.artType || 'Custom Wall Art',
         year: item.year || '',
         dims: item.area || item.dims || '',
@@ -1407,16 +1416,21 @@ async function loadPortfolioIntoGallery() {
         GALLERY_DATA[categoryKey] = [];
       }
 
-      const exists = GALLERY_DATA[categoryKey].some(existing => existing.title === galleryItem.title && existing.artist === galleryItem.artist);
-      if (!exists) {
+      const existsIndex = GALLERY_DATA[categoryKey].findIndex(existing => existing.title === galleryItem.title && existing.artist === galleryItem.artist);
+      if (existsIndex === -1) {
         GALLERY_DATA[categoryKey].push(galleryItem);
+      } else {
+        GALLERY_DATA[categoryKey][existsIndex] = galleryItem;
       }
     });
 
-    window.__portfolioGalleryMerged = true;
-  } catch (err) {
-    console.warn('[Gallery] Could not load portfolio items from Supabase:', err);
+    // Remove any mock elements that have empty titles/artists
+    for (const cat in GALLERY_DATA) {
+      GALLERY_DATA[cat] = GALLERY_DATA[cat].filter(item => item.title && item.artist);
+    }
   }
+
+  window.__portfolioGalleryMerged = true;
 }
 
 async function init3DGallery() {
@@ -2454,7 +2468,7 @@ function initRatingModal() {
       el = document.createElement('div');
       el.id = 'review-ml-reply-card';
       el.className = 'review-ml-reply-card glass-card';
-      el.hidden = true;
+      el.style.display = 'none';
       const heading = document.createElement('div');
       heading.className = 'reply-card-heading';
       heading.textContent = 'AI-generated reply';
@@ -2584,7 +2598,7 @@ function initRatingModal() {
       console.log('[review-form] submit event fired');
 
       if (mlReplyEl) {
-        mlReplyEl.hidden = true;
+        mlReplyEl.style.display = 'none';
         const body = mlReplyEl.querySelector('.reply-card-body');
         if (body) {
           body.textContent = '';
@@ -2617,7 +2631,7 @@ function initRatingModal() {
         }
 
         if (mlReplyEl) {
-          mlReplyEl.hidden = true;
+          mlReplyEl.style.display = 'none';
           const body = mlReplyEl.querySelector('.reply-card-body');
           if (body) {
             body.textContent = '';
@@ -2763,7 +2777,7 @@ function initRatingModal() {
         }
 
         if (mlReplyEl) {
-          mlReplyEl.hidden = true;
+          mlReplyEl.style.display = 'none';
           const body = mlReplyEl.querySelector('.reply-card-body');
           if (body) {
             body.textContent = '';
@@ -3271,7 +3285,7 @@ function initStatsCounter() {
   if (!stats.length) return;
 
   const animateCounter = (el) => {
-    const target = parseInt(el.getAttribute('data-target'), 10);
+    const target = parseInt(el.getAttribute('data-target'), 10) || 0;
     const suffix = el.getAttribute('data-suffix') || '';
     const useComma = el.getAttribute('data-comma') === 'true';
     const duration = 2000;
@@ -3305,16 +3319,10 @@ function initStatsCounter() {
     requestAnimationFrame(update);
   };
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
+  window.animateStatCounter = animateCounter;
 
-  stats.forEach(stat => observer.observe(stat));
+  // Run immediately for all stats since they are in the hero section above the fold
+  stats.forEach(stat => animateCounter(stat));
 }
 
 
