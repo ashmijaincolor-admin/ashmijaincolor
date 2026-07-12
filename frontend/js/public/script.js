@@ -1672,35 +1672,18 @@ async function init3DGallery() {
       lightboxRotX = targetRotX;   // Save the selected X rotation
 
       if (lightboxFrame && typeof gsap !== 'undefined') {
-        // Quick 3D rotate away
+        // Set image source directly to avoid blank/blink screen state during transition
+        if (lightboxImg) {
+          lightboxImg.src = imgUrl;
+        }
+
+        // Animate the frame smoothly to the target angle and scale
         gsap.to(lightboxFrame, {
           rotationY: targetRotY,
           rotationX: targetRotX,
-          scale: targetScale * 0.95,
-          duration: 0.3,
-          ease: "power2.out",
-          onComplete: () => {
-            // Image cross-fade
-            gsap.to(lightboxImg, {
-              opacity: 0,
-              duration: 0.2,
-              onComplete: () => {
-                // Assign onload BEFORE setting src to ensure it always fires (handles caching)
-                lightboxImg.onload = () => {
-                  gsap.to(lightboxImg, { opacity: 1, duration: 0.25 });
-                  // Animate frame to the selected angle and keep it there
-                  gsap.to(lightboxFrame, {
-                    rotationY: targetRotY,
-                    rotationX: targetRotX,
-                    scale: targetScale,
-                    duration: 0.6,
-                    ease: "power2.out"
-                  });
-                };
-                lightboxImg.src = imgUrl;
-              }
-            });
-          }
+          scale: targetScale,
+          duration: 0.5,
+          ease: "power2.out"
         });
       } else {
         // Fallback
