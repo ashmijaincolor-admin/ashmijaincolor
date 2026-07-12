@@ -1450,6 +1450,7 @@ async function init3DGallery() {
   const lightboxImg = document.getElementById('lightbox-img');
   const lightboxTitle = document.getElementById('lightbox-artwork-title');
   const lightboxArtist = document.getElementById('lightbox-artwork-artist');
+  let lightboxScale = 1;
 
   // Load selected category into UI
   function renderCategory() {
@@ -1591,6 +1592,8 @@ async function init3DGallery() {
       const art = GALLERY_DATA[activeCategory][activeArtworkIndex];
       if (!art || !lightbox) return;
 
+      lightboxScale = 1; // Reset active scale to 1 on open
+
       if (lightboxImg) {
         lightboxImg.src = art.images.front;
         lightboxImg.style.opacity = 1;
@@ -1660,6 +1663,8 @@ async function init3DGallery() {
         targetScale = 1.08;
       }
 
+      lightboxScale = targetScale; // Save the selected scale to apply during mouse hover
+
       if (lightboxFrame && typeof gsap !== 'undefined') {
         // Quick 3D rotate away
         gsap.to(lightboxFrame, {
@@ -1674,7 +1679,7 @@ async function init3DGallery() {
               opacity: 0,
               duration: 0.2,
               onComplete: () => {
-                lightboxImg.src = imgUrl;
+                // Assign onload BEFORE setting src to ensure it always fires (handles caching)
                 lightboxImg.onload = () => {
                   gsap.to(lightboxImg, { opacity: 1, duration: 0.25 });
                   // Animate frame back to center
@@ -1686,6 +1691,7 @@ async function init3DGallery() {
                     ease: "elastic.out(1, 0.75)"
                   });
                 };
+                lightboxImg.src = imgUrl;
               }
             });
           }
@@ -1714,12 +1720,14 @@ async function init3DGallery() {
       const tiltYLight = (x / (rect.width / 2)) * 5;
       const tiltXLight = -(y / (rect.height / 2)) * 5;
       
-      lightboxFrame.style.transform = `rotateY(${tiltYLight}deg) rotateX(${tiltXLight}deg)`;
+      // Preserve the current lightboxScale during mouse hover
+      lightboxFrame.style.transform = `rotateY(${tiltYLight}deg) rotateX(${tiltXLight}deg) scale(${lightboxScale})`;
     });
     
     lightbox.addEventListener('mouseleave', () => {
       if (lightboxFrame && typeof gsap !== 'undefined') {
-        gsap.to(lightboxFrame, { rotateY: 0, rotateX: 0, duration: 0.5 });
+        // Reset tilt but retain the active angle's scale
+        gsap.to(lightboxFrame, { rotateY: 0, rotateX: 0, scale: lightboxScale, duration: 0.5 });
       }
     });
   }
