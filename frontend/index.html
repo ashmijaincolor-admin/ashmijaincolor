@@ -32,7 +32,7 @@
   <script src="./js/shared/supabase-client.js?v=1" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Flip.min.js"></script>
-  <script src="./js/public/script.js?v=20260711-1" defer></script>
+  <script src="./js/public/script.js?v=20260716-2" defer></script>
   <script src="./js/public/portfolio-public.js?v=20260709-4" defer></script>
   <script src="./js/public/artists-public.js?v=20260709-4" defer></script>
   <script src="./js/public/faqs-public.js?v=20260709-4" defer></script>
@@ -73,9 +73,6 @@
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
       </button>
-
-      <button class="nav-btn" id="btn-book-artist"
-        onclick="document.getElementById('contact-section').scrollIntoView({behavior:'smooth'})">Let's Talk</button>
     </nav>
   </header>
 
@@ -92,9 +89,6 @@
         <li><a href="#about-section" class="mobile-nav-link">Story</a></li>
         <li><a href="#faq-section" class="mobile-nav-link">FAQ</a></li>
       </ul>
-      <button class="nav-btn" id="btn-mobile-book-artist"
-        onclick="document.getElementById('contact-section').scrollIntoView({behavior:'smooth'}); document.getElementById('mobile-menu-overlay').classList.remove('active'); document.getElementById('nav-hamburger-toggle').classList.remove('active'); document.getElementById('nav-hamburger-toggle').setAttribute('aria-expanded', 'false'); document.body.style.overflow = '';">Let's
-        Talk</button>
     </nav>
   </div>
 
@@ -128,31 +122,34 @@
 
       <!-- Center content card -->
       <div class="hero-content-card reveal">
-        <div class="hero-eyebrow">✦ Premium Mural Studio</div>
-        <h1 class="hero-title">Curating Walls,<br><em>Crafting Ambience.</em></h1>
-        <p class="hero-sub">We transform blank walls into immersive art experiences — connecting brands and spaces with
-          South Asia's finest mural artists.</p>
+        <div class="hero-eyebrow">✦ DESIGNED FOR LIFE'S BEAUTIFUL MOMENTS</div>
+        <h1 class="hero-title">
+          <span class="hero-line hero-line-1">Every Place Has A Heart.</span><br>
+          <span class="hero-line hero-line-2">We Help It Beat.</span>
+        </h1>
+        <p class="hero-sub">From classrooms filled with curiosity to cafes filled with conversations, we transform
+          ordinary walls into meaningful spaces that people don't just see—they remember.</p>
         <div class="hero-actions">
-          <button class="btn-primary" id="btn-hero-explore"
-            onclick="document.getElementById('portfolio-section').scrollIntoView({behavior:'smooth'})">Explore
-            Gallery</button>
-          <button class="btn-outline" id="btn-hero-artists"
-            onclick="document.getElementById('artists-section').scrollIntoView({behavior:'smooth'})">Meet Artists
-            →</button>
+          <button class="btn-primary hero-cta-glow" id="btn-hero-talk"
+            onclick="document.getElementById('contact-section').scrollIntoView({behavior:'smooth'})">Let's Create
+            Yours</button>
+          <button class="btn-outline" id="btn-hero-explore"
+            onclick="document.getElementById('portfolio-section').scrollIntoView({behavior:'smooth'})">Explore Our
+            Creations </button>
         </div>
         <div class="hero-stats">
           <div class="hero-stat-item">
-            <div class="hero-stat-num" data-target="750" data-suffix="k+">0</div>
-            <div class="hero-stat-label">Sq. ft. painted</div>
+            <div class="hero-stat-num" data-target="200" data-suffix="k+">200k</div>
+            <div class="hero-stat-label">Sq. ft. of walls covered</div>
           </div>
           <div class="hero-stat-divider" aria-hidden="true"></div>
           <div class="hero-stat-item">
-            <div class="hero-stat-num" data-target="100" data-suffix="+">0</div>
-            <div class="hero-stat-label">Projects done</div>
+            <div class="hero-stat-num" data-target="80" data-suffix="+">80</div>
+            <div class="hero-stat-label">Walls Transformed</div>
           </div>
           <div class="hero-stat-divider" aria-hidden="true"></div>
           <div class="hero-stat-item">
-            <div class="hero-stat-num" data-target="38" data-suffix="+">0</div>
+            <div class="hero-stat-num" data-target="38" data-suffix="+">38</div>
             <div class="hero-stat-label">Cities</div>
           </div>
         </div>
@@ -164,13 +161,13 @@
       <div class="cta-inner reveal">
         <div class="cta-glow"></div>
         <h2>Ready to transform your<br><em>wall today?</em></h2>
-        <p>Join 3,000+ happy clients who turned blank walls into unforgettable brand experiences.</p>
+        <p>Join 78+ happy clients who turned blank walls into unforgettable brand experiences.</p>
         <div class="cta-btns">
           <button class="cta-btn-primary" id="btn-cta-start"
             onclick="document.getElementById('contact-section').scrollIntoView({behavior:'smooth'})">Start Your
             Project</button>
           <button class="cta-btn-outline" id="btn-cta-portfolio"
-            onclick="document.getElementById('portfolio-section').scrollIntoView({behavior:'smooth'})">View Portfolio
+            onclick="document.getElementById('portfolio-section').scrollIntoView({behavior:'smooth'})">Explore Our Creations
             →</button>
         </div>
 
@@ -188,7 +185,7 @@
         <div class="works-header reveal" style="margin-bottom: 2rem;">
           <div>
             <span class="gallery-kicker">✦ Immersive Exhibition</span>
-            <h2 class="sec-title" style="color: var(--ink);">The 3D Gallery</h2>
+            <h2 class="sec-title" style="color: var(--ink);">Our Creations</h2>
           </div>
         </div>
 
@@ -402,18 +399,10 @@
             <!-- Back Face -->
             <div class="flip-card-back glass-card">
               <div class="creator-card-back-info">
-                <span class="creator-role-badge">Lead Artist, Urban & Abstract</span>
+                <span class="creator-role-badge">Co-Founder , CEO</span>
                 <h3 class="creator-name-title">VIKRAM</h3>
-                <p class="creator-bio-text">Specializing in geometric abstraction and large-scale urban realism, Vikram
-                  has spent the last 12 years collaborating with corporate campuses, hospitality interiors, and public
-                  districts to transform blank walls into local landmarks.</p>
-                <blockquote class="creator-quote-text">"Art should not be confined behind closed doors. Corporate
-                  corridors and public walls are the spaces where street realism and daily life truly merge."
-                </blockquote>
-                <div class="creator-stats-wrap">
-                  <span class="creator-stat-badge">✦ Featured in Elle Décor</span>
-                  <span class="creator-stat-badge">✦ 80+ Projects</span>
-                </div>
+                <p class="creator-bio-text">Every exceptional space begins with a thoughtful vision. I specialize in creative strategy and artistic planning, crafting concepts that seamlessly blend aesthetics, purpose, and storytelling. My focus is to ensure every mural and design transforms a space into an experience that is both meaningful and memorable.</p>
+                <blockquote class="creator-quote-text">"I don’t decorate walls—I define them."</blockquote>
               </div>
             </div>
           </div>
@@ -432,17 +421,10 @@
             <!-- Back Face -->
             <div class="flip-card-back glass-card">
               <div class="creator-card-back-info">
-                <span class="creator-role-badge">Lead Artist, Muralist</span>
+                <span class="creator-role-badge">Founder</span>
                 <h3 class="creator-name-title">ASHMIJA</h3>
-                <p class="creator-bio-text">Merging intricate botanical illustrations with architectural backdrops,
-                  Ashmija's nature-inspired murals and large-scale floral art pieces bring organic life and a sense of
-                  calm to high-end interiors across South Asia.</p>
-                <blockquote class="creator-quote-text">"My work bridges the gap between concrete rooms and the wild
-                  serenity of nature. I paint to give blank walls a voice and spaces a heartbeat."</blockquote>
-                <div class="creator-stats-wrap">
-                  <span class="creator-stat-badge">✦ 120+ Murals</span>
-                  <span class="creator-stat-badge">✦ National Art Award</span>
-                </div>
+                <p class="creator-bio-text">I transform walls and spaces into powerful visual stories that inspire, connect, and awaken emotion. Each mural is a carefully crafted journey of color, movement, and meaning — where every brushstroke reflects a story, a feeling, or a shared experience. Through thoughtful design and artistic expression, I create environments that go beyond decoration, turning ordinary spaces into unforgettable places of inspiration and connection.</p>
+                <blockquote class="creator-quote-text">"Art isn’t what I do—it’s how I help spaces tell their stories."</blockquote>
               </div>
             </div>
           </div>
@@ -453,15 +435,15 @@
     <div class="stats-band" id="stats-band">
       <div class="stats-band-inner reveal">
         <div class="stat-item">
-          <div class="stat-num" data-target="750" data-suffix="k+">750k+</div>
-          <div class="stat-label">Sq. ft. of walls painted</div>
+          <div class="stat-num" data-target="200" data-suffix="k+">200k+</div>
+          <div class="stat-label">Sq. ft. of walls covered</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num" data-target="100" data-suffix="+">100+</div>
-          <div class="stat-label">Projects delivered</div>
+          <div class="stat-num" data-target="80" data-suffix="+">80+</div>
+          <div class="stat-label">Walls Transformed</div>
         </div>
         <div class="stat-item">
-          <div class="stat-num" data-target="100" data-suffix="+">100+</div>
+          <div class="stat-num" data-target="78" data-suffix="+">78+</div>
           <div class="stat-label">Happy clients</div>
         </div>
         <div class="stat-item">
@@ -488,7 +470,7 @@
         </div>
         <div class="why-card glass-subtle">
           <div class="why-icon-wrap"><i class="ti ti-sparkles" aria-hidden="true"></i></div>
-          <h4>Personalised Design</h4>
+          <h4>Unlimited Personalised Designs</h4>
           <p>Bespoke concept development and mood boards tailored to your brand identity and space story.</p>
         </div>
         <div class="why-card glass-subtle">
@@ -504,12 +486,13 @@
         <div class="why-card glass-subtle">
           <div class="why-icon-wrap"><i class="ti ti-color-swatch" aria-hidden="true"></i></div>
           <h4>Premium Materials</h4>
-          <p>UV-resistant, eco-certified paints ensuring murals that look stunning for 10+ years outdoors.</p>
+          <p>UV-resistant, eco-certified paints, kids friendly, ensuring murals that look stunning for 10+ years
+            outdoors.</p>
         </div>
         <div class="why-card glass-subtle">
           <div class="why-icon-wrap"><i class="ti ti-camera" aria-hidden="true"></i></div>
-          <h4>Pro Photography</h4>
-          <p>Every project ends with a professional photoshoot — portfolio-ready and social-ready imagery.</p>
+          <h4>Free Promotion</h4>
+          <p>Every completed artwork is shared on our social media, giving your art free visibility and promotion.</p>
         </div>
       </div>
     </section>
@@ -635,29 +618,35 @@
         <div class="about-content">
           <div class="sec-label">Our Story</div>
           <h2 class="sec-title">About ashmija in color</h2>
-          <p class="sec-sub" style="max-width:650px;margin-top:.8rem;line-height:1.75;font-size:1.05rem;">Founded in <strong>2015</strong>
+          <p class="sec-sub" style="max-width:650px;margin-top:.8rem;line-height:1.75;font-size:1.05rem;">Founded in
+            <strong>2015</strong>
             in <strong>Kallakurichi</strong>, <strong>Ashmija in Color</strong> was born from a simple belief:
             <strong>every wall has the power to tell a story</strong>. What began as a passion for transforming blank
             spaces into meaningful works of art has evolved into a creative studio dedicated to delivering exceptional
             mural experiences.
           </p>
-          <p class="sec-sub" style="max-width:650px;margin-top:1.2rem;line-height:1.75;font-size:1.05rem;">Our team of talented artists and
+          <p class="sec-sub" style="max-width:650px;margin-top:1.2rem;line-height:1.75;font-size:1.05rem;">Our team of
+            talented artists and
             designers specializes in custom wall murals, artistic installations, commercial artwork, and creative
             interior transformations. Every project is thoughtfully crafted to reflect the client's vision, brand
             identity, and the unique character of the space.</p>
-          <p class="sec-sub" style="max-width:650px;margin-top:1.2rem;line-height:1.75;font-size:1.05rem;">From homes and offices to hotels,
+          <p class="sec-sub" style="max-width:650px;margin-top:1.2rem;line-height:1.75;font-size:1.05rem;">From homes
+            and offices to hotels,
             cafés, schools, and corporate environments, we create murals that inspire, engage, and leave a lasting
             impression. Whether it's a bold abstract design, a nature-inspired masterpiece, or a custom concept, we
             combine creativity, craftsmanship, and attention to detail to bring every wall to life.</p>
-          <p class="sec-sub" style="max-width:650px;margin-top:1.2rem;line-height:1.75;font-size:1.05rem;">At <strong>Ashmija in
+          <p class="sec-sub" style="max-width:650px;margin-top:1.2rem;line-height:1.75;font-size:1.05rem;">At
+            <strong>Ashmija in
               Color</strong>, we don't just paint walls—we create experiences that connect people, elevate spaces, and
-            tell unforgettable stories through art.</p>
+            tell unforgettable stories through art.
+          </p>
         </div>
         <div class="about-values" style="margin-top: 0;">
           <div class="about-value-item">
             <div class="why-icon-wrap"><i class="ti ti-heart" aria-hidden="true"></i></div>
             <div>
-              <h4 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--ink);margin-bottom:.3rem">
+              <h4
+                style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--ink);margin-bottom:.3rem">
                 Passion-Driven</h4>
               <p style="font-size:0.88rem;color:var(--muted);line-height:1.6;font-weight:300">Every project is treated
                 as a work of art, not just a job.</p>
@@ -666,7 +655,8 @@
           <div class="about-value-item">
             <div class="why-icon-wrap"><i class="ti ti-users" aria-hidden="true"></i></div>
             <div>
-              <h4 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--ink);margin-bottom:.3rem">
+              <h4
+                style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--ink);margin-bottom:.3rem">
                 Community First</h4>
               <p style="font-size:0.88rem;color:var(--muted);line-height:1.6;font-weight:300">We empower local artists
                 and invest in emerging talent.</p>
@@ -675,7 +665,8 @@
           <div class="about-value-item">
             <div class="why-icon-wrap"><i class="ti ti-leaf" aria-hidden="true"></i></div>
             <div>
-              <h4 style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--ink);margin-bottom:.3rem">
+              <h4
+                style="font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;color:var(--ink);margin-bottom:.3rem">
                 Eco-Conscious</h4>
               <p style="font-size:0.88rem;color:var(--muted);line-height:1.6;font-weight:300">100% eco-certified,
                 UV-resistant paints on every project.</p>
@@ -1002,7 +993,7 @@
       <div class="footer-copy">© 2026 ashmija in color. All rights reserved.</div>
       <div class="footer-watermark">
         <img src="./assets/images/kyrav_logo.png" alt="KYRAV logo" class="watermark-logo">
-        <span>developed by <strong>KYRAV WEB STUDIO</strong> | Where Confidence Meets Creativity.</span>
+        <span>developed by KYRAV WEB STUDIO</span>
       </div>
       <div class="footer-socials">
         <a href="https://www.instagram.com/ashmija_in_color?igsh=NzhrbGJvaWVhMTJ3" class="social-icon instagram"
@@ -1041,19 +1032,12 @@
       <span class="creator-role-badge">ashmija in color Collective</span>
       <h3 class="creator-name-title">Our Curation & Network</h3>
       <p class="creator-bio-text">
-        At ashmija in color, we maintain a highly curated network of over 120 professional muralists, traditional
-        painters, graffiti artists, and sculptors across South Asia.
+        At ashmija in color, we maintain a highly curated network of over 26 professional muralists, traditional
+        painters, graffiti artists, and sculptors across Tamilnadu.
       </p>
       <p class="creator-bio-text">
-        Our artists are selected not only for their exceptional visual craftsmanship but also for their understanding of
-        architectural scale, safety standards, and durable material applications. We handle the entire lifecycle: design
-        licensing, digital mockup staging, scaffold logistics, and weather-proof varnishing.
+        Behind every mural, every brushstroke, and every creative concept at Ashmija in Color is a passionate team driven by imagination and dedication. Our Founder and Co-Founder started this journey with a vision to transform ordinary walls into meaningful works of art that inspire, connect, and leave a lasting impression. Their commitment to creativity, quality, and customer satisfaction has helped bring countless ideas to life across homes, cafés, schools, offices, and commercial spaces. Discover the people, the passion, and the story behind Ashmija in Color, and see how their vision continues to shape every project with innovation and excellence.
       </p>
-      <div class="creator-stats-wrap" style="margin-top:1.5rem;justify-content:flex-start">
-        <span class="creator-stat-badge">✦ 120+ Active Artists</span>
-        <span class="creator-stat-badge">✦ 38+ Cities Connected</span>
-        <span class="creator-stat-badge">✦ Staging & Safety Audited</span>
-      </div>
       <div style="margin-top:2rem;display:flex;gap:1rem">
         <button class="btn"
           style="padding:.75rem 1.8rem;border:none;border-radius:6px;background:var(--gold);color:white;cursor:pointer;font-weight:500;font-size:.85rem;transition:background .3s"

@@ -1169,12 +1169,12 @@
         window.notifyContentChange?.('portfolio', { action: 'update', id: _editingId });
         showToast('success', 'Saved', `"${title}" updated successfully.`);
       } else {
-        /* INSERT — append after existing items */
-        const maxOrder = _items.length > 0
-          ? Math.max(..._items.map(i => i.display_order || 0))
-          : -1;
+        /* INSERT — place new items first */
+        const minOrder = _items.length > 0
+          ? Math.min(..._items.map(i => Number(i.display_order) || 0))
+          : 0;
 
-        payload.display_order = maxOrder + 1;
+        payload.display_order = minOrder - 1;
 
         const { error } = await window.db.from(TABLE).insert(payload);
         if (error) throw error;

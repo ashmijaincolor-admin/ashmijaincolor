@@ -95,10 +95,10 @@
   }
 
   function parseReviewText(reviewText) {
-    const withLocation = extractReviewLocation(reviewText);
-    const withImage = extractWorkImage(withLocation.text);
+    const withImage = extractWorkImage(reviewText);
+    const withLocation = extractReviewLocation(withImage.text);
     return {
-      text: withImage.text,
+      text: withLocation.text,
       location: withLocation.location,
       workImage: withImage.workImage,
     };
@@ -328,6 +328,15 @@
           <div class="form-group full">
             <label class="form-label" for="review-work-image">Project Work Photo</label>
             <input class="form-input" type="file" id="review-work-image" accept="image/*" style="width: 100%;" />
+            <div id="work-image-cropper" hidden style="margin-top: 10px;">
+              <canvas id="work-image-crop-canvas" width="800" height="450" style="width: 100%; height: auto; display: block; border-radius: 8px; cursor: grab; touch-action: none;"></canvas>
+              <div style="display: grid; gap: 7px; margin-top: 10px; font-size: 0.8rem;">
+                <label>Zoom <input type="range" id="work-image-crop-zoom" min="1" max="2.5" step="0.05" value="1"></label>
+                <label>Horizontal <input type="range" id="work-image-crop-x" min="0" max="100" value="50"></label>
+                <label>Vertical <input type="range" id="work-image-crop-y" min="0" max="100" value="50"></label>
+              </div>
+              <p style="margin: 8px 0 0; font-size: 0.78rem; color: var(--muted);">Drag the image to position the crop, or use the controls. The cropped image below will be saved.</p>
+            </div>
             <div style="text-align: center; margin-top: 8px;">
               <img id="work-image-preview" class="review-modal-upload-preview${parseReviewText(review.review_text).workImage ? ' active' : ''}" src="${parseReviewText(review.review_text).workImage || ''}" style="max-width: 100%; height: 120px; border-radius: 8px; object-fit: cover; display: ${parseReviewText(review.review_text).workImage ? 'inline-block' : 'none'};" />
             </div>
@@ -491,20 +500,75 @@
 
       const workFileEl = document.getElementById('review-work-image');
       const workPreviewEl = document.getElementById('work-image-preview');
-      if (workFileEl && workPreviewEl) {
-        workFileEl.addEventListener('change', async (e) => {
+      const workCropperEl = document.getElementById('work-image-cropper');
+      const workCropCanvas = document.getElementById('work-image-crop-canvas');
+      const workCropZoom = document.getElementById('work-image-crop-zoom');
+      const workCropX = document.getElementById('work-image-crop-x');
+      const workCropY = document.getElementById('work-image-crop-y');
+      let workCropSource = null;
+
+      const renderWorkCrop = () => {
+        if (!workCropSource || !workCropCanvas || !workPreviewEl) return;
+        const ratio = 16 / 9;
+        const zoom = Number(workCropZoom.value);
+        const baseWidth = workCropSource.width / workCropSource.height > ratio ? workCropSource.height * ratio : workCropSource.width;
+        const baseHeight = workCropSource.width / workCropSource.height > ratio ? workCropSource.height : workCropSource.width / ratio;
+        const cropWidth = baseWidth / zoom;
+        const cropHeight = baseHeight / zoom;
+        const sourceX = (workCropSource.width - cropWidth) * (Number(workCropX.value) / 100);
+        const sourceY = (workCropSource.height - cropHeight) * (Number(workCropY.value) / 100);
+        const context = workCropCanvas.getContext('2d');
+        context.clearRect(0, 0, workCropCanvas.width, workCropCanvas.height);
+        context.drawImage(workCropSource, sourceX, sourceY, cropWidth, cropHeight, 0, 0, workCropCanvas.width, workCropCanvas.height);
+        workPreviewEl.src = workCropCanvas.toDataURL('image/jpeg', 0.78);
+        workPreviewEl.style.display = 'inline-block';
+        workPreviewEl.classList.add('active');
+      };
+
+      if (workFileEl && workPreviewEl && workCropperEl && workCropCanvas && workCropZoom && workCropX && workCropY) {
+        workFileEl.addEventListener('change', (e) => {
           const file = e.target.files[0];
-          if (file) {
-            try {
-              const compressed = await compressImage(file);
-              workPreviewEl.src = compressed;
-              workPreviewEl.style.display = 'inline-block';
-              workPreviewEl.classList.add('active');
-            } catch (err) {
-              console.warn('Failed to compress work image', err);
-            }
-          }
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            workCropSource = new Image();
+            workCropSource.onload = () => {
+              workCropZoom.value = '1';
+              workCropX.value = '50';
+              workCropY.value = '50';
+              workCropperEl.hidden = false;
+              renderWorkCrop();
+            };
+            workCropSource.src = reader.result;
+          };
+          reader.readAsDataURL(file);
         });
+        [workCropZoom, workCropX, workCropY].forEach((control) => control.addEventListener('input', renderWorkCrop));
+
+        let dragStart = null;
+        workCropCanvas.addEventListener('pointerdown', (event) => {
+          dragStart = {
+            x: event.clientX,
+            y: event.clientY,
+            cropX: Number(workCropX.value),
+            cropY: Number(workCropY.value),
+          };
+          workCropCanvas.setPointerCapture(event.pointerId);
+          workCropCanvas.style.cursor = 'grabbing';
+        });
+        workCropCanvas.addEventListener('pointermove', (event) => {
+          if (!dragStart) return;
+          const bounds = workCropCanvas.getBoundingClientRect();
+          workCropX.value = String(Math.min(100, Math.max(0, dragStart.cropX + ((event.clientX - dragStart.x) / bounds.width) * 100)));
+          workCropY.value = String(Math.min(100, Math.max(0, dragStart.cropY + ((event.clientY - dragStart.y) / bounds.height) * 100)));
+          renderWorkCrop();
+        });
+        const stopCropDrag = () => {
+          dragStart = null;
+          workCropCanvas.style.cursor = 'grab';
+        };
+        workCropCanvas.addEventListener('pointerup', stopCropDrag);
+        workCropCanvas.addEventListener('pointercancel', stopCropDrag);
       }
 
       // Add avatar radio click handlers

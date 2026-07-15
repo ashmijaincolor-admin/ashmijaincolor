@@ -1382,7 +1382,7 @@ async function loadPortfolioIntoGallery() {
         .from('portfolio')
         .select('*')
         .eq('is_hidden', false)
-        .order('display_order', { ascending: true });
+        .order('created_at', { ascending: false });
       if (error) throw error;
       items = data || [];
     }
@@ -1396,7 +1396,8 @@ async function loadPortfolioIntoGallery() {
   }
 
   if (items && items.length > 0) {
-    items.forEach((item) => {
+    // Insert oldest first; unshift then leaves the newest admin item first.
+    [...items].reverse().forEach((item) => {
       const categoryKey = getGalleryCategoryKey(item.category);
       if (!categoryKey) return;
 
@@ -1407,9 +1408,12 @@ async function loadPortfolioIntoGallery() {
         year: item.year || '',
         dims: item.area || item.dims || '',
         desc: item.description || item.desc || '',
-        images: {
-          front: item.image_url || item.imageUrl || 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
-        },
+        // Admin uploads contain one source image. Expose it for every view so
+        // the 3D lightbox keeps its Front/Angle/Wide/Close-up controls.
+        images: (() => {
+          const imageUrl = item.image_url || item.imageUrl || 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80';
+          return { front: imageUrl, left: imageUrl, right: imageUrl, wide: imageUrl, close: imageUrl };
+        })(),
       };
 
       if (!GALLERY_DATA[categoryKey]) {
@@ -1418,9 +1422,10 @@ async function loadPortfolioIntoGallery() {
 
       const existsIndex = GALLERY_DATA[categoryKey].findIndex(existing => existing.title === galleryItem.title && existing.artist === galleryItem.artist);
       if (existsIndex === -1) {
-        GALLERY_DATA[categoryKey].push(galleryItem);
+        GALLERY_DATA[categoryKey].unshift(galleryItem);
       } else {
-        GALLERY_DATA[categoryKey][existsIndex] = galleryItem;
+        GALLERY_DATA[categoryKey].splice(existsIndex, 1);
+        GALLERY_DATA[categoryKey].unshift(galleryItem);
       }
     });
   }
@@ -2824,10 +2829,14 @@ function initRatingModal() {
 });
 function initContactForm() {
   const contactForm = document.getElementById('contact-section-form');
-  if (!contactForm) return;
+  // This page also loads shared/admin scripts that can attach a contact handler.
+  // Keep one handler only, so a successful submit reliably shows the thank-you state.
+  if (!contactForm || contactForm.dataset.contactHandlerBound === 'true') return;
+  contactForm.dataset.contactHandlerBound = 'true';
 
   contactForm.addEventListener('submit', async (event) => {
     event.preventDefault();
+    event.stopImmediatePropagation();
 
     const submitBtn = document.getElementById('btn-contact-submit');
     const originalText = submitBtn ? submitBtn.textContent : 'Send Message';
@@ -2868,8 +2877,16 @@ function initContactForm() {
 
       if (error) throw error;
 
-      alert('Thank you! Your details have been sent.');
       contactForm.reset();
+
+      const formContainer = document.getElementById('contact-form-container');
+      const successState = document.getElementById('contact-success-state');
+      if (formContainer && successState) {
+        formContainer.style.display = 'none';
+        successState.style.display = 'flex';
+      } else {
+        alert('Thank you! Your details have been sent.');
+      }
     } catch (err) {
       console.error('[contact-form] submit error:', err);
       alert('Failed to send your message. Please try again.');

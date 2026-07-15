@@ -171,7 +171,14 @@
       }, {});
 
       let tagline = config.hero_tagline || '';
-      if (tagline && !tagline.includes('<em')) {
+      
+      // Auto-format specific taglines if the user entered them without proper formatting
+      const lowerTagline = tagline.trim().toLowerCase();
+      if (lowerTagline === 'every wall has a story every story deserves color') {
+        tagline = 'Every Wall Has a Story,<br><em>Every Story Deserves Color.</em>';
+      } else if (lowerTagline === 'every place has a heart we help it beat') {
+        tagline = '<span class="hero-line hero-line-1">Every Place Has A Heart.</span><br><span class="hero-line hero-line-2">We Help It Beat.</span>';
+      } else if (tagline && !tagline.includes('<em')) {
         const parts = tagline.split(/,|\n|<br>/i);
         if (parts.length >= 2) {
           tagline = `${parts[0].trim()},<br><em>${parts.slice(1).join(', ').trim()}</em>`;
@@ -180,9 +187,16 @@
       updateTextContent('.hero-title', tagline, true);
       updateTextContent('.hero-sub', config.hero_sub || '');
 
+      // Override stat values with correct business numbers
+      const STAT_OVERRIDES = {
+        stat_sqft: '200k+',
+        stat_projects: '80+',
+        stat_cities: '38+'
+      };
+
       const statEls = document.querySelectorAll('.hero-stat-num');
-      if (statEls.length > 0 && config.stat_sqft) {
-        const valStr = String(config.stat_sqft);
+      if (statEls.length > 0) {
+        const valStr = String(STAT_OVERRIDES.stat_sqft);
         const numPart = parseInt(valStr.replace(/[^0-9]/g, ''), 10) || 0;
         const suffixPart = valStr.replace(/[0-9]/g, '');
         statEls[0].setAttribute('data-target', numPart);
@@ -193,11 +207,8 @@
           statEls[0].textContent = numPart + suffixPart;
         }
       }
-      if (statEls.length > 1 && config.stat_projects) {
-        let valStr = String(config.stat_projects);
-        if (valStr.includes('2,900') || valStr.includes('2900')) {
-          valStr = '100+';
-        }
+      if (statEls.length > 1) {
+        let valStr = String(STAT_OVERRIDES.stat_projects);
         const numPart = parseInt(valStr.replace(/[^0-9]/g, ''), 10) || 0;
         const suffixPart = valStr.replace(/[0-9]/g, '').replace(/,/g, '');
         statEls[1].setAttribute('data-target', numPart);
@@ -208,8 +219,8 @@
           statEls[1].textContent = numPart + suffixPart;
         }
       }
-      if (statEls.length > 2 && config.stat_cities) {
-        const valStr = String(config.stat_cities);
+      if (statEls.length > 2) {
+        const valStr = String(STAT_OVERRIDES.stat_cities);
         const numPart = parseInt(valStr.replace(/[^0-9]/g, ''), 10) || 0;
         const suffixPart = valStr.replace(/[0-9]/g, '');
         statEls[2].setAttribute('data-target', numPart);
