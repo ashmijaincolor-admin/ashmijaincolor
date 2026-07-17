@@ -1269,6 +1269,8 @@ tbody td {
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-gutter: stable;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .modal-footer {
