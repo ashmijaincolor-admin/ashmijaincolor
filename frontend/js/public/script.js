@@ -1,5 +1,26 @@
 'use strict';
 
+function scrollToTarget(target) {
+  if (!target) return;
+  const header = document.querySelector('header');
+  const headerHeight = header ? (header.getBoundingClientRect().height || 0) : 0;
+  const targetTop = target.getBoundingClientRect().top + (window.pageYOffset || window.scrollY || 0);
+  const offsetTop = Math.max(targetTop - headerHeight - 10, 0);
+
+  window.scrollTo({
+    top: offsetTop,
+    behavior: 'smooth',
+  });
+}
+
+window.smoothScrollToSection = function smoothScrollToSection(targetId) {
+  const id = String(targetId || '').replace(/^#/, '');
+  const target = document.getElementById(id);
+  if (target) {
+    scrollToTarget(target);
+  }
+};
+
 // Scroll reveal observer
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
@@ -2425,6 +2446,38 @@ if (btnCreatorsMore) {
   });
 }
 
+// Click handler for 'Book an Artist' button inside team overview modal
+const btnModalBookArtist = document.getElementById('btn-modal-book-artist');
+if (btnModalBookArtist) {
+  btnModalBookArtist.addEventListener('click', () => {
+    // Hide modal and backdrop instantly
+    const teamModal = document.getElementById('team-modal');
+    if (teamModal) {
+      teamModal.style.transition = 'none';
+      teamModal.classList.remove('active');
+    }
+    if (modalBackdrop) {
+      modalBackdrop.style.transition = 'none';
+      modalBackdrop.classList.remove('active');
+    }
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    document.body.classList.remove('menu-open');
+    document.documentElement.classList.remove('menu-open');
+    
+    // Restore transition styles
+    setTimeout(() => {
+      if (teamModal) teamModal.style.transition = '';
+      if (modalBackdrop) modalBackdrop.style.transition = '';
+    }, 100);
+
+    // Scroll smoothly to contact section after a brief layout refresh
+    setTimeout(() => {
+      window.smoothScrollToSection?.('contact-section');
+    }, 50);
+  });
+}
+
 function initRatingModal() {
   const STATIC_REVIEWS = [
     {
@@ -2485,7 +2538,7 @@ function initRatingModal() {
         </div>
         <div class="testimonial-content">
           <div class="testimonial-avatar">
-            <img src="${review.hasPhoto ? review.avatar : generateMonogram(review.name)}" alt="${review.name}">
+            <img src="${review.avatar ? review.avatar : generateMonogram(review.name)}" alt="${review.name}">
           </div>
           <h4 class="testimonial-name">${review.name}</h4>
           <span class="testimonial-company">${review.company}</span>
@@ -2921,6 +2974,8 @@ function initContactForm() {
       });
 
       if (error) throw error;
+
+      window.notifyContentChange?.('inquiry', { source: 'contact-form' });
 
       contactForm.reset();
 
@@ -3358,9 +3413,39 @@ function initMobileNavigation() {
 
   const links = overlay.querySelectorAll('.mobile-nav-link');
   links.forEach((link) => {
-    link.addEventListener('click', () => {
-      setActiveLink(link.getAttribute('href'));
-      closeMenu();
+    link.addEventListener('click', (event) => {
+      const hash = link.getAttribute('href');
+      if (!hash || hash === '#') return;
+
+      event.preventDefault();
+
+      // Hide overlay instantly
+      overlay.style.transition = 'none';
+      overlay.classList.remove('active');
+      overlay.setAttribute('aria-hidden', 'true');
+
+      const hamburger = document.getElementById('nav-hamburger-toggle');
+      if (hamburger) {
+        hamburger.classList.remove('active');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.classList.remove('menu-open');
+      document.documentElement.classList.remove('menu-open');
+
+      // Restore transition styles
+      setTimeout(() => {
+        overlay.style.transition = '';
+      }, 100);
+
+      // Scroll smoothly to section after a brief layout refresh
+      setTimeout(() => {
+        window.smoothScrollToSection?.(hash);
+        setActiveLink(hash);
+        history.pushState(null, '', hash);
+      }, 50);
     });
   });
 

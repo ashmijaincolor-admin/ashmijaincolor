@@ -1,7 +1,7 @@
 /**
  * config.js — Supabase project configuration
  */
-(function() {
+(function () {
   'use strict';
 
   window.appConfig = {

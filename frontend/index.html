@@ -39,7 +39,6 @@
   <script src="./js/public/config-public.js?v=20260711-1" defer></script>
   <script src="./js/shared/data-loader.js?v=20260629-1" defer></script>
   <script src="./admin/js/toast.js?v=20260711-1" defer></script>
-  <script src="./admin/js/inquiries.js?v=20260711-1" defer></script>
 </head>
 
 <body>
@@ -1058,10 +1057,9 @@
         homes, cafés, schools, offices, and commercial spaces. Discover the people, the passion, and the story behind
         Ashmija in Color, and see how their vision continues to shape every project with innovation and excellence.
       </p>
-      <div style="margin-top:2rem;display:flex;gap:1rem">
-        <button class="btn"
-          style="padding:.75rem 1.8rem;border:none;border-radius:6px;background:var(--gold);color:white;cursor:pointer;font-weight:500;font-size:.85rem;transition:background .3s"
-          onclick="document.getElementById('contact-section').scrollIntoView(); document.getElementById('team-modal').classList.remove('active'); document.getElementById('modal-backdrop').classList.remove('active');">Book
+      <div class="team-modal-actions" style="margin-top:2rem;display:flex;gap:1rem">
+        <button class="btn" id="btn-modal-book-artist"
+          style="padding:.75rem 1.8rem;border:none;border-radius:6px;background:var(--gold);color:white;cursor:pointer;font-weight:500;font-size:.85rem;transition:background .3s">Book
           an Artist</button>
       </div>
     </div>
